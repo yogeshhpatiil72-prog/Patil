@@ -1,0 +1,45 @@
+PATIL NEO — Admin Direct Video Upload Setup (Marathi)
+
+या update मध्ये Admin panel मधून video file थेट upload करता येईल. आता Video URL paste करण्याची गरज नाही.
+Admin panel मध्ये Movie नाव, Poster URL आणि Video File निवडा. Upload पूर्ण झाल्यावर movie website वर publish होईल.
+
+FILES
+- admin.html: Direct video upload + progress + publish/delete
+- storage.rules: Firebase Storage security rules
+- index.html, style.css, script.js: website player आणि UI (मूळ files)
+- firestore.rules: Firestore security rules (मूळ rules)
+
+महत्त्वाची Billing सूचना:
+Firebase Cloud Storage वापरण्यासाठी सध्या Firebase project ला Blaze (pay-as-you-go) plan जोडणे आवश्यक आहे. Usage free quota मध्ये राहू शकते, पण quota पेक्षा जास्त storage/download झाल्यास charges लागू होऊ शकतात. Billing account जोडण्यापूर्वी खर्च आणि budget alerts तपासा.
+Official Firebase info: https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024
+
+SETUP
+1) GitHub repository मध्ये या ZIP मधील files extract करून replace/upload करा.
+2) Firebase Console उघडा: https://console.firebase.google.com/
+3) Project: patill-neo निवडा.
+4) Build / Storage (किंवा Databases & Storage → Storage) मध्ये Get started करा. Bucket तयार/enable करा.
+5) Storage वापरण्यासाठी project Blaze plan वर असणे आवश्यक आहे. स्वतःच्या परवानगीशिवाय billing upgrade करू नका.
+6) Firebase Console → Storage → Rules मध्ये storage.rules मधील पूर्ण मजकूर paste करून Publish करा.
+7) Firestore Rules मध्ये firestore.rules आधीप्रमाणे Publish आहेत याची खात्री करा.
+8) Authentication → Sign-in method → Email/Password ON असावे.
+9) Authentication → Users मधील Admin UID खालील UID शी जुळला पाहिजे:
+   mc7ClIcpnDXFfhMFYVnDsIw1Qo13
+10) GitHub Pages update होण्यासाठी 1–5 मिनिटे थांबा.
+11) Admin URL:
+    https://yogeshhpatiil72-prog.github.io/Patilneo.in/admin.html
+12) Admin login करा → Movie name भरा → Poster image URL द्या → Video File निवडा → Upload Video & Publish दाबा.
+13) Upload progress दिसेल. पूर्ण झाल्यावर title website वर सर्वांना दिसेल.
+14) Delete केल्यावर movie record आणि त्याचा uploaded video दोन्ही delete करण्याचा प्रयत्न केला जाईल.
+
+VIDEO NOTES
+- MP4 recommended; WebM/QuickTime video types देखील accept होतात.
+- Maximum file size या Admin UI मध्ये 500 MB आहे.
+- मोठे video upload करताना stable internet वापरा.
+- फक्त स्वतःचे किंवा distribution/streaming ची परवानगी असलेले videos upload करा.
+- हा upload feature Firebase Storage वर आधारित आहे; video file website च्या GitHub repository मध्ये जात नाही.
+
+जर Storage permission किंवा 402/403 error आला:
+- Storage bucket तयार आहे का तपासा.
+- Project Blaze plan वर आहे का तपासा.
+- storage.rules Publish झाले आहेत का तपासा.
+- Admin UID योग्य आहे का तपासा.

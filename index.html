@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080611">
+  <title>PATILNEO — Stream • Explore • Enjoy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <button class="icon-button menu-button" id="menuBtn" aria-label="Menu">☰</button>
+    <a class="brand" href="#" aria-label="Patilneo home"><span class="brand-mark">P</span><span>PATIL<span class="neo">NEO</span></span></a>
+    <nav class="desktop-nav"><button class="nav-link active" data-view="home">Home</button><button class="nav-link" data-view="movies">Movies</button><button class="nav-link" data-view="series">Series</button><button class="nav-link" data-view="mylist">My List</button></nav>
+    <div class="top-actions"><button class="icon-button" id="searchToggle" aria-label="Search">⌕</button><button class="avatar" id="profileBtn" aria-label="Profile">P</button></div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-bg"></div><div class="hero-shade"></div>
+      <div class="hero-content">
+        <div class="eyebrow"><span class="live-dot"></span> PATILNEO ORIGINALS <span class="tag">FEATURED</span></div>
+        <p class="hero-kicker">YOUR NEXT OBSESSION STARTS HERE</p>
+        <h1>Stories that<br><span>stay with you.</span></h1>
+        <p class="hero-copy">Discover your next favourite movie, series, or unforgettable story.</p>
+        <div class="hero-meta"><span>2026</span><i></i><span>Movies & Series</span><i></i><span class="age">U/A 16+</span><i></i><span class="quality">HD</span></div>
+        <div class="hero-buttons"><button class="primary-btn" id="heroExplore">▶ &nbsp; Explore titles</button><button class="secondary-btn" id="heroList">＋ &nbsp; My List</button></div>
+      </div>
+      <div class="hero-pagination"><span class="active"></span><span></span><span></span><span></span></div>
+      <div class="hero-caption">STREAM <b>•</b> EXPLORE <b>•</b> ENJOY</div>
+    </section>
+
+    <section class="search-panel hidden" id="searchPanel"><input id="searchInput" type="search" placeholder="Search movies, series, genres..." autocomplete="off"><button id="clearSearch">✕</button></section>
+    <section class="quick-categories" id="categories">
+      <button class="category-chip selected" data-category="All">For You</button><button class="category-chip" data-category="Action">Action</button><button class="category-chip" data-category="Drama">Drama</button><button class="category-chip" data-category="Sci-Fi">Sci-Fi</button><button class="category-chip" data-category="Romance">Romance</button><button class="category-chip" data-category="Comedy">Comedy</button><button class="category-chip" data-category="Marathi">Marathi</button>
+    </section>
+
+    <section class="content-section" id="continueSection">
+      <div class="section-heading"><div><p class="section-overline">PICK UP WHERE YOU LEFT OFF</p><h2>Continue watching <span class="subtle">›</span></h2></div><button class="text-button" data-view="mylist">View list ↗</button></div>
+      <div class="continue-row" id="continueRow"></div>
+    </section>
+
+    <section class="content-section" id="trendingSection">
+      <div class="section-heading"><div><p class="section-overline">THE INTERNET IS TALKING</p><h2>Trending now <span class="spark">✦</span></h2></div><button class="text-button" data-view="movies">See all ↗</button></div>
+      <div class="poster-row" id="trendingRow"></div>
+    </section>
+
+    <section class="content-section" id="popularSection">
+      <div class="section-heading"><div><p class="section-overline">HANDPICKED FOR YOU</p><h2 id="catalogTitle">Popular on <span class="neo-text">PATILNEO</span></h2></div><span class="count" id="titleCount">0 titles</span></div>
+      <div class="catalog-grid" id="catalogGrid"></div>
+      <p class="empty-state hidden" id="emptyState">No titles found. Try another search or category.</p>
+    </section>
+
+    <section class="promo-card">
+      <div class="promo-orb">✦</div><div><p class="section-overline">YOUR ENTERTAINMENT UNIVERSE</p><h2>One place. <span>Infinite stories.</span></h2><p>Save titles to your list and build your own watch universe.</p></div><button class="primary-btn" id="promoExplore">Explore now ↗</button>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">P</span><span>PATIL<span class="neo">NEO</span></span></a><p>Stream • Explore • Enjoy</p><small>Demo experience. Only stream content you own or are licensed to distribute.</small></footer>
+
+  <nav class="mobile-nav">
+    <button class="mobile-tab active" data-view="home"><span>⌂</span>Home</button><button class="mobile-tab" data-view="movies"><span>▤</span>Movies</button><button class="mobile-tab" data-view="series"><span>▣</span>Series</button><button class="mobile-tab" data-view="mylist"><span>♡</span>My List</button><button class="mobile-tab" data-view="profile"><span>◎</span>Profile</button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <section id="watchPage" class="watch-page hidden">
+    <header class="watch-page-header"><button id="watchBack" class="secondary-btn">← Back</button><div><strong>PATIL NEO</strong><span>NOW PLAYING</span></div></header>
+    <main class="watch-page-main">
+      <div class="watch-player-wrap">
+        <video id="watchVideo" class="watch-media hidden" controls playsinline></video>
+        <iframe id="watchFrame" class="watch-media hidden" title="Movie player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <h1 id="watchPageTitle"></h1><p id="watchPageMeta" class="watch-page-meta"></p><p id="watchPageDescription"></p>
+      <p class="watch-page-note">Some external sites block embedding. Only use video links you own or are authorized to stream.</p>
+    </main>
+  </section>
+  <div class="modal hidden" id="detailModal" role="dialog" aria-modal="true"><div class="modal-backdrop" id="modalBackdrop"></div><div class="modal-card"><button class="modal-close" id="modalClose">✕</button><div class="modal-art" id="modalArt"></div><div class="modal-info"><p class="section-overline" id="modalType">FEATURED TITLE</p><h2 id="modalTitle">Title</h2><p class="modal-meta" id="modalMeta"></p><p id="modalDescription"></p><div class="hero-buttons"><button class="primary-btn" id="modalWatch">▶ &nbsp; Watch trailer</button><button class="secondary-btn" id="modalSave">＋ &nbsp; My List</button></div><small class="modal-note">Demo catalogue — trailer/video links can be added for content you have permission to stream.</small></div></div></div>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+window.PATILNEO_FIREBASE_CONFIG = {"apiKey": "AIzaSyAoDWEwBikrd6M1S3XRBFsQdxnuGenAwsM", "authDomain": "patill-neo.firebaseapp.com", "projectId": "patill-neo", "storageBucket": "patill-neo.firebasestorage.app", "messagingSenderId": "1016370117356", "appId": "1:1016370117356:web:7ce18142910de0112483c9", "measurementId": "G-GV7V87PE5H"};
+</script>
+\n  <script src="script.js"></script>
+</body>
+</html>

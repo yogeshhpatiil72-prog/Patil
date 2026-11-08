@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080611"><title>PATIL NEO Admin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080611;color:#f7f4ff;font-family:Arial,sans-serif;padding:18px}
+.wrap{max-width:720px;margin:0 auto}.brand{font-weight:900;letter-spacing:2px;font-size:25px}.brand span{color:#b36bff}
+.card{margin-top:18px;background:#151020;border:1px solid #39234f;border-radius:18px;padding:20px;box-shadow:0 10px 40px #0005}
+h1{font-size:23px;margin:8px 0}p{color:#bcb4cc;line-height:1.5}label{display:block;margin:14px 0 6px;color:#d8cce8;font-size:13px}
+input,select,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #49345e;background:#0d0916;color:#fff;font-size:15px}
+input[type=file]{padding:10px}button{border:0;border-radius:10px;padding:13px 16px;font-weight:700;cursor:pointer}.primary{background:linear-gradient(90deg,#8d38ff,#bf63ff);color:white;width:100%;margin-top:18px}.secondary{background:#2a2038;color:white}.danger{background:#47202b;color:#ffb6c5}
+.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #30243e}.item img{width:54px;height:72px;object-fit:cover;border-radius:6px}.info{flex:1;min-width:0}.info b{display:block;overflow-wrap:anywhere}.info small,.note{color:#bcb4cc;font-size:12px}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.status{font-size:13px;color:#d7baff;overflow-wrap:anywhere}
+.progress{height:9px;background:#2b2038;border-radius:9px;overflow:hidden;margin-top:10px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#8d38ff,#ff62ca);transition:width .15s}
+.hint{font-size:12px;color:#9f94b0;margin-top:7px}.file-name{font-size:12px;color:#d9c3ff;margin-top:6px;overflow-wrap:anywhere}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+</head>
+<body><div class="wrap">
+<div class="brand">PATIL<span>NEO</span> / ADMIN</div>
+<div class="card" id="loginCard"><h1>Admin Login</h1><p>Firebase admin email आणि password वापरून Login करा.</p>
+<label>Email</label><input id="email" type="email" autocomplete="username" placeholder="Admin email">
+<label>Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Password">
+<button class="primary" id="loginBtn">Login</button><p class="status" id="loginStatus"></p>
+</div>
+<div id="panel" class="hidden">
+<div class="card"><div class="actions" style="justify-content:space-between"><h1>Movie Manager</h1><button class="secondary" id="logoutBtn">Logout</button></div>
+<p>Movie किंवा Series जोडा. आता video link टाकायची गरज नाही — मोबाईल/कॉम्प्युटरमधून video file निवडा आणि upload करा.</p>
+<form id="movieForm">
+<label>Movie / Series name *</label><input id="title" required maxlength="90" placeholder="Title">
+<label>Poster image URL *</label><input id="poster" type="url" required placeholder="https://...">
+<label>Video file upload *</label><input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime,video/*" required>
+<div class="file-name" id="fileName">अजून video निवडलेला नाही.</div>
+<p class="hint">MP4 recommended. Maximum file size: 500 MB. Upload साठी internet लागेल.</p>
+<div class="progress hidden" id="progressWrap"><span id="progressBar"></span></div>
+<label>Type</label><select id="type"><option>Movie</option><option>Series</option></select>
+<label>Genre</label><select id="genre"><option>Action</option><option>Drama</option><option>Sci-Fi</option><option>Romance</option><option>Comedy</option><option>Marathi</option><option>Documentary</option><option>Other</option></select>
+<label>Year</label><input id="year" type="number" min="1900" max="2100" value="2026">
+<label>Description</label><textarea id="description" rows="3" maxlength="400"></textarea>
+<button class="primary" id="saveBtn" type="submit">⬆ Upload Video & Publish</button></form><p class="status" id="formStatus"></p>
+<div class="actions"><a href="index.html" style="text-decoration:none"><button class="secondary" type="button">Open website</button></a></div>
+</div>
+<div class="card"><h2>Published titles</h2><div id="items"></div></div>
+</div></div>
+<script>
+const cfg = {"apiKey":"AIzaSyAoDWEwBikrd6M1S3XRBFsQdxnuGenAwsM","authDomain":"patill-neo.firebaseapp.com","projectId":"patill-neo","storageBucket":"patill-neo.firebasestorage.app","messagingSenderId":"1016370117356","appId":"1:1016370117356:web:7ce18142910de0112483c9","measurementId":"G-GV7V87PE5H"};
+const ADMIN_UID = "mc7ClIcpnDXFfhMFYVnDsIw1Qo13";
+const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
+firebase.initializeApp(cfg);
+const auth=firebase.auth(), db=firebase.firestore(), storage=firebase.storage();
+const $=s=>document.querySelector(s);
+const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function showPanel(user){
+  const allowed=!!user && user.uid===ADMIN_UID;
+  $("#loginCard").classList.toggle("hidden",allowed);
+  $("#panel").classList.toggle("hidden",!allowed);
+  if(user&&!allowed){auth.signOut();$("#loginStatus").textContent="This account is not authorized as PATIL NEO admin.";}
+  if(allowed)listenMovies();
+}
+$("#loginBtn").onclick=async()=>{
+  $("#loginStatus").textContent="Signing in...";
+  try{await auth.signInWithEmailAndPassword($("#email").value.trim(),$("#password").value);}
+  catch(e){$("#loginStatus").textContent=e.message;}
+};
+$("#logoutBtn").onclick=()=>auth.signOut();
+auth.onAuthStateChanged(showPanel);
+$("#videoFile").addEventListener("change",()=>{
+  const f=$("#videoFile").files[0];
+  $("#fileName").textContent=f?`${f.name} · ${(f.size/1024/1024).toFixed(1)} MB`:"अजून video निवडलेला नाही.";
+});
+function safeFileName(name){return name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100)||"video.mp4";}
+$("#movieForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const file=$("#videoFile").files[0];
+  if(!file){$("#formStatus").textContent="कृपया video file निवडा.";return;}
+  if(!file.type.startsWith("video/")){ $("#formStatus").textContent="फक्त video file upload करा.";return; }
+  if(file.size>MAX_VIDEO_BYTES){$("#formStatus").textContent="Video 500 MB पेक्षा मोठा आहे. छोटा file निवडा.";return;}
+  const user=auth.currentUser;
+  if(!user||user.uid!==ADMIN_UID){$("#formStatus").textContent="Admin login आवश्यक आहे.";return;}
+  const saveBtn=$("#saveBtn");saveBtn.disabled=true;saveBtn.textContent="Uploading...";
+  $("#formStatus").textContent="Video upload सुरू आहे...";
+  $("#progressWrap").classList.remove("hidden");$("#progressBar").style.width="0%";
+  const path=`movies/${Date.now()}_${safeFileName(file.name)}`;
+  const ref=storage.ref().child(path);
+  let uploaded=false;
+  try{
+    const task=ref.put(file,{contentType:file.type});
+    const snap=await new Promise((resolve,reject)=>{
+      task.on("state_changed",s=>{
+        const pct=s.totalBytes?Math.round(s.bytesTransferred/s.totalBytes*100):0;
+        $("#progressBar").style.width=pct+"%";
+        $("#formStatus").textContent=`Video upload होत आहे... ${pct}%`;
+      },reject,()=>resolve(task.snapshot));
+    });
+    uploaded=true;
+    const videoUrl=await snap.ref.getDownloadURL();
+    await db.collection("movies").add({
+      title:$("#title").value.trim(),poster:$("#poster").value.trim(),video:videoUrl,videoPath:path,
+      type:$("#type").value,genre:$("#genre").value,category:"Custom",
+      year:Number($("#year").value)||2026,description:$("#description").value.trim(),
+      rating:"—",label:"NEW",colors:["#201035","#8e3cff"],
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+    e.target.reset();$("#year").value=2026;$("#fileName").textContent="अजून video निवडलेला नाही.";
+    $("#formStatus").textContent="Published! Video upload झाला आणि website वर दिसेल.";
+    $("#progressBar").style.width="100%";
+  }catch(err){
+    if(uploaded){try{await ref.delete();}catch(cleanupErr){console.warn("Upload cleanup failed",cleanupErr);}}
+    $("#formStatus").textContent="Upload/Publish error: "+(err.message||err);
+  }finally{saveBtn.disabled=false;saveBtn.textContent="⬆ Upload Video & Publish";}
+});
+function listenMovies(){
+  db.collection("movies").orderBy("createdAt","desc").onSnapshot(snap=>{
+    $("#items").innerHTML=snap.empty?"<p>No published titles yet.</p>":snap.docs.map(doc=>{
+      const x=doc.data();return `<div class="item"><img src="${esc(x.poster)}" onerror="this.style.opacity='.25'"><div class="info"><b>${esc(x.title)}</b><small>${esc(x.type)} · ${esc(x.genre)} · ${esc(String(x.year))}</small></div><button class="danger" data-del="${doc.id}">Delete</button></div>`;
+    }).join("");
+  },err=>$("#items").textContent=err.message);
+}
+$("#items").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-del]");if(!b)return;
+  if(!confirm("Delete this title and its uploaded video from PATIL NEO?"))return;
+  b.disabled=true;
+  try{
+    const docRef=db.collection("movies").doc(b.dataset.del);
+    const doc=await docRef.get(), data=doc.data()||{};
+    await docRef.delete();
+    if(data.videoPath){try{await storage.ref().child(data.videoPath).delete();}catch(storageErr){console.warn("Video delete failed",storageErr);}}
+  }catch(err){alert(err.message);b.disabled=false;}
+});
+</script></body></html>

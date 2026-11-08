@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "title": "Midnight Run",
+    "category": "Hollywood",
+    "genre": "Action",
+    "year": 2025,
+    "rating": "8.1",
+    "type": "Movie"
+  },
+  {
+    "id": 2,
+    "title": "Dil Se Again",
+    "category": "Bollywood",
+    "genre": "Romance",
+    "year": 2025,
+    "rating": "7.8",
+    "type": "Movie"
+  },
+  {
+    "id": 3,
+    "title": "Southern Storm",
+    "category": "South",
+    "genre": "Action",
+    "year": 2024,
+    "rating": "8.4",
+    "type": "Movie"
+  },
+  {
+    "id": 4,
+    "title": "Neon City",
+    "category": "Hollywood",
+    "genre": "Sci-Fi",
+    "year": 2025,
+    "rating": "8.6",
+    "type": "Series"
+  },
+  {
+    "id": 5,
+    "title": "Mumbai Files",
+    "category": "Bollywood",
+    "genre": "Drama",
+    "year": 2024,
+    "rating": "8.2",
+    "type": "Series"
+  },
+  {
+    "id": 6,
+    "title": "The Last Orbit",
+    "category": "Hollywood",
+    "genre": "Sci-Fi",
+    "year": 2024,
+    "rating": "8.7",
+    "type": "Movie"
+  },
+  {
+    "id": 7,
+    "title": "Premachi Goshta",
+    "category": "Marathi",
+    "genre": "Romance",
+    "year": 2025,
+    "rating": "7.9",
+    "type": "Movie"
+  },
+  {
+    "id": 8,
+    "title": "Shadow Protocol",
+    "category": "Hollywood",
+    "genre": "Action",
+    "year": 2023,
+    "rating": "8.0",
+    "type": "Movie"
+  },
+  {
+    "id": 9,
+    "title": "Laughing Stock",
+    "category": "Bollywood",
+    "genre": "Comedy",
+    "year": 2025,
+    "rating": "7.5",
+    "type": "Series"
+  },
+  {
+    "id": 10,
+    "title": "The Blue Hour",
+    "category": "South",
+    "genre": "Drama",
+    "year": 2024,
+    "rating": "8.3",
+    "type": "Movie"
+  },
+  {
+    "id": 11,
+    "title": "City of Stars",
+    "category": "Bollywood",
+    "genre": "Romance",
+    "year": 2023,
+    "rating": "7.7",
+    "type": "Movie"
+  },
+  {
+    "id": 12,
+    "title": "Wild Frontier",
+    "category": "Hollywood",
+    "genre": "Action",
+    "year": 2024,
+    "rating": "8.1",
+    "type": "Series"
+  }
+]
